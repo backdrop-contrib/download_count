@@ -146,7 +146,7 @@ function download_count_uninstall() {
   config_clear('download_count.settings', 'download_count_sparkline_min');
   config_clear('download_count.settings', 'download_count_sparkline_height');
   config_clear('download_count.settings', 'download_count_sparkline_width');
-  config_clear('download_count.settings', 'download_count_last_cron');
+  state_del('download_count_last_cron');
   config_clear('download_count.settings', 'download_count_details_daily_limit');
   config_clear('download_count.settings', 'download_count_details_weekly_limit');
   config_clear('download_count.settings', 'download_count_details_monthly_limit');
@@ -184,7 +184,7 @@ function download_count_update_1000() {
   $config->set('download_count_flood_limit', update_variable_get('download_count_flood_limit', '0'));
   $config->set('download_count_flood_window', update_variable_get('download_count_flood_window', '5'));
   $config->set('download_count_excluded_file_extensions', update_variable_get('download_count_excluded_file_extensions', 'jpg jpeg gif png'));
-  $config->set('download_count_last_cron', update_variable_get('download_count_last_cron', '0'));
+  state_set('download_count_last_cron', update_variable_get('download_count_last_cron', '0'));
   $config->set('download_count_delta_block_limit', update_variable_get('download_count_delta_block_limit', 'dynamic variable in file /download_count/download_count.module line 272'));
   $config->set('download_count_block_block_limit', update_variable_get('download_count_block_block_limit', 'dynamic variable in file /download_count/download_count.module line 307'));
   $config->set('download_count_export_range', update_variable_get('download_count_export_range', '0'));
@@ -223,6 +223,17 @@ function download_count_update_1000() {
   update_variable_del('download_count_sparkline_min');
   update_variable_del('download_count_sparkline_height');
   update_variable_del('download_count_sparkline_width');
+}
+
+/**
+ * Move download_count_last_cron from configuration to state.
+ */
+function download_count_update_1001() {
+  $value = config_get('download_count.settings', 'download_count_last_cron');
+  if ($value !== NULL) {
+    state_set('download_count_last_cron', $value);
+    config_clear('download_count.settings', 'download_count_last_cron');
+  }
 }
 
 /**

@@ -370,7 +370,7 @@ function download_count_cron() {
   $time = REQUEST_TIME;
   $status = 0;
   $count = 0;
-  $last_cron = config_get('download_count.settings', 'download_count_last_cron');
+  $last_cron = state_get('download_count_last_cron', 0);
 
   $result = db_query('SELECT fid, type, id, UNIX_TIMESTAMP(DATE(FROM_UNIXTIME(timestamp))) as date, COUNT(dcid) as count FROM {download_count} WHERE timestamp > :last_cron GROUP BY type, id, fid, DATE(FROM_UNIXTIME(timestamp))', array(':last_cron' => $last_cron));
   $queue = BackdropQueue::get('download_count');
@@ -381,7 +381,7 @@ function download_count_cron() {
   if ($count > 0) {
     watchdog('download_count', 'Download count queued %count new entries for caching.',   array('%count' => $count), WATCHDOG_NOTICE);
   }
-  config_set('download_count.settings', 'download_count_last_cron', $time);
+  state_set('download_count_last_cron', $time);
 }
 
 /**
