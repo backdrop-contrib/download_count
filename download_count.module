@@ -214,8 +214,9 @@ function download_count_file_transfer($file) {
     return;
   }
 
-  // Capture referrer safely.
-  $referrer = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL;
+  // The referrer column is NOT NULL. Browsers omit HTTP_REFERER when the
+  // download URL is typed or pasted, so store an empty string in that case.
+  $referrer = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 
   // Count the download.
   db_insert('download_count')
@@ -323,7 +324,7 @@ function download_count_file_download_access_alter(&$grants, $field, $entity_typ
   // Count the download.
   $entity_info = entity_get_info($entity_type);
   $ip = ip_address();
-  $referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : NULL;
+  $referrer = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 
   db_insert('download_count')
     ->fields([
