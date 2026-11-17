@@ -214,7 +214,7 @@ function download_count_clear_confirm($form, &$form_state) {
  * Form submit handler for download_count_clear_confirm().
  */
 function download_count_clear_confirm_submit($form, &$form_state) {
-  config_set('download_count.settings', 'download_count_last_cron', 0);
+  state_set('download_count_last_cron', 0);
   db_truncate('download_count_cache')->execute();
   backdrop_set_message(t('The download count cache has been cleared.'));
   watchdog('download_count', 'The download count cache has been cleared.', array(), WATCHDOG_NOTICE);
