@@ -57,15 +57,32 @@ function download_count_views_data() {
     ),
   );
 
-  // uid
+  // uid. This column is also a relationship so the username can be added
+  // from the users table. The field exposes the raw downloading user ID,
+  // which the CSV export already includes.
   $data['download_count']['uid'] = array(
-    'title' => t('User'),
-    'help' => t('The user who downloaded the file.'),
+    'title' => t('Downloading user ID'),
+    'help' => t('The user ID of the user who downloaded the file. Add the downloading user relationship to display the username.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
     'relationship' => array(
       'base' => 'users',
       'base field' => 'uid',
       'handler' => 'views_handler_relationship',
-      'label' => t('User'),
+      'label' => t('Downloading user'),
+      'title' => t('Downloading user'),
+      'help' => t('Relate a download to the user who downloaded the file.'),
     ),
   );
 
